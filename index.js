@@ -16,6 +16,7 @@ console.log("Server starting...:" + portListen)
 // ============================*/
 const mqtt = require('mqtt');
 const topic1 = 'latihanTopic1';
+const topic2 = 'latihanTopic2';
 
 const broker_server = 'mqtt://platform.antares.id'; //broker darisananya
 
@@ -33,6 +34,7 @@ clientMqtt.on('message', mqtt_messageReceived);
 function mqtt_connect() {
 	console.log('MQTT Connected');
 	clientMqtt.subscribe(topic1);
+	clientMqtt.subscribe(topic2);
 }
 
 function mqtt_reconnect(err){
@@ -58,6 +60,24 @@ function mqtt_messageReceived(topic , message){
 
   	//will use later
 	if (topic == topic1){
+		// message 
+		var h1data1 = 0;
+		listMessage1 = parsingRAWData(message,","); //parse the message by comma
+		// console.log("Pesan : " +listMessage1);
+		// set message to var
+		h1data1 = listMessage1[0];
+		console.log("pesan : "+ h1data1);
+
+  		console.log('====================================');
+
+		io.sockets.emit('house-dataone', {
+									//json
+									// call in client h1data.topic , h1data.windSpeeds....
+									// topic : topic1 ,
+									h1data1 : listMessage1[0]
+								});
+    } 
+	if (topic == topic2){
 		// message 
 		var h1data1 = 0;
 		listMessage1 = parsingRAWData(message,","); //parse the message by comma

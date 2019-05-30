@@ -6,8 +6,8 @@
 
 // Tune Connection
 
-const char* wifiSSID = "Sukapura86";
-const char* wifiPassword = "17081977";
+const char* wifiSSID = "Aswandi";
+const char* wifiPassword = "aswandihartati";
 
 
 // MQTT Define
@@ -16,14 +16,14 @@ const char* mqttServerIP = "platform.antares.id";
 const int mqttPort = 1883;
 
 // Define topic MQTT
- char* topicLatihan1 = "latihan/topik1"; // pub & syv
+const char* topicLatihan1 = "latihan/topik1"; // pub & syv
 
 
 WiFiClient myESP; // myESP become WIFI
 PubSubClient client(myESP);
 
 long lastMsg = 0;
-char msg[50];
+char msg[50], humic[20];
 int value = 0;
 
 int timeDelay = 100;
@@ -95,6 +95,17 @@ Serial.print("Masuk : " );
 Serial.println(pesan);
 } 
 
+long humi = 0,
+hdop = 0,
+alti = 0,
+roll = 0,
+pitch = 0,
+yaw = 0,
+temp = 0,
+gas = 0;
+
+float latitude = -1.23456, longitude = 20.123456, anjay = 0.5;
+
 
 void setup(){
   Serial.begin(57600);
@@ -115,6 +126,18 @@ void loop() {
   }
   client.loop();
 
+  humi = random(0,100);
+  temp = random(1,150);
+  roll = random(-150,200);
+  yaw = random(-160,140);
+  pitch = random(-110,200);
+  gas = random(0,150);
+  hdop = random(20,300);
+  latitude = latitude + anjay;
+  longitude = longitude + anjay;
+
+  sprintf(humic, "%ld", humi);
+  
   long now = millis();
   if (now - lastMsg > 2000) {
     lastMsg = now;
@@ -122,6 +145,9 @@ void loop() {
     snprintf (msg, 50, "hello world #%ld", value);
     Serial.print("Publish message: ");
     Serial.println(msg);
+    Serial.println(humic);
     client.publish("latihanTopic1", msg);
+    client.publish("latihanTopic2", humic);
+    //client.publish("latihanTopic1", temp);
   }
 }
