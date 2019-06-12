@@ -1,0 +1,33 @@
+.cube {
+	border: 5px solid white;
+	box-sizing: border-box;
+	transition: transform .5s ease-in-out;
+	/* note: might need some vendor prefixes around here :) */
+}
+
+.cube .front,
+.cube .back {
+	background: #ff9900;
+}
+
+.cube .left,
+.cube .right {
+	background: rgba(255,0,255,0.3);
+}
+
+.cube .top,
+.cube .bottom {
+	background: #0066ff;
+}
+
+/* JS */
+var stage = Sprite3D.stage();
+var cube = Sprite3D.box( 100,100,100, ".cube" );
+
+stage.appendChild( cube );
+
+function onCubeClick(e){
+	e.target.rotationX( Math.random() * 360 ).update();
+}
+
+cube.addEventListener("click",onCubeClick,false);

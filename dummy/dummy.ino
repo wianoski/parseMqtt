@@ -126,7 +126,7 @@ void loop() {
   }
   client.loop();
 
-  humi = random(0,100);
+  humi = random(0,100), random(1,150);
   temp = random(1,150);
   roll = random(-150,200);
   yaw = random(-160,140);

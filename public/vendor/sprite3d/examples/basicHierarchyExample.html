@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<meta name='HandheldFriendly' content='True' />
+		<meta name='viewport' content='width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0' />
+		<title>Sprite3D.js - Basics - Simple Hierarchy and animation</title>
+
+		<style>
+		
+			html, body { height: 100%; }
+
+			body {
+				background-color: white;
+				margin: 0px;
+				padding: 0px;
+				overflow: hidden;
+			}
+
+			#cube .left,
+			#cube .right {
+				background: url('img/html5_logo.png') 0px 0px;
+				width: 200px;
+				height: 500px;
+			}
+
+			#cube .front,
+			#cube .back {
+				background: url('img/html5_logo.png') -200px 0px;
+				width: 200px;
+				height: 500px;
+			}
+
+		</style>
+
+	</head>
+	<body>
+		<script src="../Sprite3D.js" type="text/javascript"></script>
+		<script type="text/javascript">
+			(function(){
+				var t = 0,
+					container = Sprite3D.stage().appendChild(
+						Sprite3D.box( 200, 500, 200, "cube" ).z(-100).rotationX(-20).update()
+					);
+				setInterval( function() {
+					t += .05;
+					container
+						.rotation( Math.cos(t*2) * 15 - 20, container.rotationY()-3,0 )
+						.scale( Math.sin(t) * .5 + 1 )
+						.update();
+				}, 1000 / 40 );			
+			})();
+		</script>
+	</body>
+</html>
