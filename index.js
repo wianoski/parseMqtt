@@ -1,13 +1,13 @@
 // EXPREES DAN SOCKET IO
 const express = require('express');
-const app = express(); 
+const app = express();
 const server = require('http').createServer(app);
 const io = require('socket.io').listen(server); // import package socket.io
 const path = require('path');
 
-app.use(express.static(path.join(__dirname,'public')));
+app.use(express.static(path.join(__dirname, 'public')));
 // app.use(express.static(path.join(__dirname,'webs'))); // untuk nempation file web kita di folder www
-const portListen = 7878;
+const portListen = 8090;
 server.listen(portListen);
 console.log("Server starting...:" + portListen)
 
@@ -21,11 +21,11 @@ const topic2 = 'latihanTopic2';
 const broker_server = 'mqtt://platform.antares.id'; //broker darisananya
 
 const options = {
-	clientId : 'esp_device' + Math.random().toString(16).substr(2, 8),
-	port : 1883,
-	keepalive : 60
+	clientId: 'esp_device' + Math.random().toString(16).substr(2, 8),
+	port: 1883,
+	keepalive: 60
 }
-const clientMqtt = mqtt.connect(broker_server,options);
+const clientMqtt = mqtt.connect(broker_server, options);
 clientMqtt.on('connect', mqtt_connect);
 clientMqtt.on('reconnect', mqtt_reconnect);
 clientMqtt.on('error', mqtt_error);
@@ -37,64 +37,67 @@ function mqtt_connect() {
 	clientMqtt.subscribe(topic2);
 }
 
-function mqtt_reconnect(err){
+function mqtt_reconnect(err) {
 	console.log(err);
 	console.log('MQTT reconnect');
 	//clientMqtt = mqtt.connect(broker_server, options); // reconnect
 }
 
-function mqtt_error(err){
+function mqtt_error(err) {
 	console.log(err);
 }
 
 var listMessage1 = [];
-function mqtt_messageReceived(topic , message){
+var listMessage2 = [];
+
+function mqtt_messageReceived(topic, message) {
 	//console.log('Message received : ' + message);
 	//console.log('Topic :' + topic);
 	//var stringBuf = packet.payload.toString('utf-8');
-    //var obj = JSON.parse(message.toString());
-    console.log('====================================');
-  	console.log('Topic : ' + topic );
-  	console.log('Payload : ' + message);
+	// var obj = JSON.parse(message.toString());
+	console.log('====================================');
+	console.log('Topic : ' + topic);
+	console.log('Payload : ' + message);
+	
 
 
-  	//will use later
-	if (topic == topic1){
-		// message 
+	//will use later
+	if (topic == topic1) {
+		// initiate variable fot msg
 		var h1data1 = 0;
-		listMessage1 = parsingRAWData(message,","); //parse the message by comma
+		listMessage1 = parsingRAWData(message, ","); //parse the message by comma
 		// console.log("Pesan : " +listMessage1);
-		// set message to var
-		h1data1 = listMessage1[0];
-		console.log("pesan : "+ h1data1);
 
-  		console.log('====================================');
+		// custom get data
+		// h1data1 = listMessage1[3];
+		// console.log("pesan : " + h1data1);
+		console.log('====================================');
 
-		io.sockets.emit('house-dataone', {
-									//json
-									// call in client h1data.topic , h1data.windSpeeds....
-									// topic : topic1 ,
-									h1data1 : listMessage1[0]
-								});
-    } 
-	if (topic == topic2){
+		io.sockets.emit('dataGetOne', {
+			//json
+			// call in client h1data.topic , h1data.windSpeeds....
+			// topic : topic1 ,
+			h1data1: listMessage1[7]
+		});
+	}
+	if (topic == topic2) {
 		// message 
-		var h1data1 = 0;
-		listMessage1 = parsingRAWData(message,","); //parse the message by comma
-		// console.log("Pesan : " +listMessage1);
+		var h2data1 = 0;
+		listMessage2 = parsingRAWData(message, ","); //parse the message by comma
+		// console.log("Pesan : " +listMessage2);
 		// set message to var
-		h1data1 = listMessage1[0];
-		console.log("pesan : "+ h1data1);
+		// h2data1 = listMessage2[4];
+		// console.log("pesan : " + h2data1);
 
-  		console.log('====================================');
+		console.log('====================================');
 
-		io.sockets.emit('house-dataone', {
-									//json
-									// call in client h1data.topic , h1data.windSpeeds....
-									// topic : topic1 ,
-									h1data1 : listMessage1[0]
-								});
-    } 
+		io.sockets.emit('dataGetTwo', {
+			//json
+			// call in client h1data.topic , h1data.windSpeeds....
+			// topic : topic1 ,
+			h2data1: listMessage2[2]
+		});
+	}
 }
 // /*=====  End of MQTT  ======*/
 
@@ -102,7 +105,7 @@ function mqtt_messageReceived(topic , message){
 =            Socket IO            =
 =================================*/
 let jumlahClient = 0;
-io.on('connection' , (socket)=> {
+io.on('connection', (socket) => {
 	jumlahClient++;
 	console.log('New Client Connected');
 
@@ -113,7 +116,7 @@ io.on('connection' , (socket)=> {
 	// });
 
 
-	socket.on('disconnect' , ()=> {
+	socket.on('disconnect', () => {
 		jumlahClient--;
 		console.log('Client disconnected \n' + 'Total :' + jumlahClient);
 	});
@@ -129,9 +132,9 @@ io.on('connection' , (socket)=> {
 // argument 1 : data yang diparsing ex: 123 434 5334
 // argument 2 : pemisah
 // return array data [0] =123 [1] =434 [2] =5334
-function parsingRAWData(data,delimiter){
+function parsingRAWData(data, delimiter) {
 	let result;
-	result = data.toString().replace(/(\r\n|\n|\r)/gm,"").split(delimiter);
+	result = data.toString().replace(/(\r\n|\n|\r)/gm, "").split(delimiter);
 
 	return result;
 }
