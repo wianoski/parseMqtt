@@ -19,6 +19,26 @@ function getDatas() {
     })
 };
 
+function ctrlSubOne() {
+    const socket = io.connect();
+    socket.emit('ctrl-one', {
+        data: true
+    });
+    $('#ctrlSubOne').text("Sending Sub");
+    console.log("Data sended");
+};
+
+function ctrlSubTwo() {
+    const socket = io.connect();
+    socket.emit('ctrl-two', {
+        data: {
+            "car": "Audi"
+          }
+    });
+    $('#ctrlSubTwo').text("Sending Sub");
+    console.log("Data sended");
+};
+
 function saveData() {
     var firebaseConfig = {
         apiKey: "AIzaSyAj92llUHIY0gdYYhdq4HkYEwPCAkPtpwc",
@@ -31,7 +51,7 @@ function saveData() {
     };
     // Initialize Firebase
     firebase.initializeApp(firebaseConfig);
-/*=========================================================*/
+    /*=========================================================*/
     const socket = io.connect();
     socket.on('dataGetOne', (data) => {
         dataOne1 = data.h1data1;
@@ -40,5 +60,5 @@ function saveData() {
         dataTwo1 = data.h2data1;
     })
 
-    
+
 }

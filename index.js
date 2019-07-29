@@ -11,7 +11,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 // app.use(express.static(path.join(__dirname,'webs'))); // untuk nempation file web kita di folder www
 const portListen = 8090;
 server.listen(portListen);
-console.log("Server starting...:" + portListen)
+console.log("Server starting... localhost:" + portListen)
 
 // /*============================
 // =            MQTT            =
@@ -67,52 +67,52 @@ function mqtt_messageReceived(topic, message) {
 		// initiate variable fot msg
 		var h1data1 = 0;
 		listMessage1 = parsingRAWData(message, ","); //parse the message by comma
-		// console.log("Pesan : " +listMessage1);
-		var objs0 = JSON.stringify(listMessage1[0]);
-		var objs1 = JSON.stringify(listMessage1[1]);
-		var objs2 = JSON.stringify(listMessage1[2]);
-		var objs3 = JSON.stringify(listMessage1[3]);
-		var objs4 = JSON.stringify(listMessage1[4]);
-		var objs5 = JSON.stringify(listMessage1[5]);
-		var objs6 = JSON.stringify(listMessage1[6]);
+		// // console.log("Pesan : " +listMessage1);
+		// var objs0 = JSON.stringify(listMessage1[0]);
+		// var objs1 = JSON.stringify(listMessage1[1]);
+		// var objs2 = JSON.stringify(listMessage1[2]);
+		// var objs3 = JSON.stringify(listMessage1[3]);
+		// var objs4 = JSON.stringify(listMessage1[4]);
+		// var objs5 = JSON.stringify(listMessage1[5]);
+		// var objs6 = JSON.stringify(listMessage1[6]);
 
-		var jsonData1 = [
-			{
-				"data0": objs0
-			},{
-				"data1": objs1
-			},{
-				"data2": objs2
-			},{
-				"data3": objs3
-			},{
-				"data4": objs4
-			},{
-				"data5": objs5
-			},{
-				"data6": objs6
-			},
-		]
-		
-		console.log("Printed")
-		var csv = json2csv({msg: jsonData1, header:['data0', 'data1', 'data2', 'data3', 'data4', 'data5', 'data6']});
-		fs.writeFileSync("./data1.csv", csv);
+		// var jsonData1 = [
+		// 	{
+		// 		"data0": objs0
+		// 	},{
+		// 		"data1": objs1
+		// 	},{
+		// 		"data2": objs2
+		// 	},{
+		// 		"data3": objs3
+		// 	},{
+		// 		"data4": objs4
+		// 	},{
+		// 		"data5": objs5
+		// 	},{
+		// 		"data6": objs6
+		// 	},
+		// ]
 
-		// fs.writeFile("data1.json", objs, function (err, result) {
-		// 	if (err) console.log('error', err);
-		// });
-		
-		
+		// console.log("Printed")
+		// var csv = json2csv({msg: jsonData1, header:['data0', 'data1', 'data2', 'data3', 'data4', 'data5', 'data6']});
+		// fs.writeFileSync("./data1.csv", csv);
+
+		// // fs.writeFile("data1.json", objs, function (err, result) {
+		// // 	if (err) console.log('error', err);
+		// // });
+
+
 		// h1data1 = listMessage1[3];
 		// console.log("pesan : " + h1data1);
-		console.log('====================================');
+		console.log('==============Pubs======================');
 
 		io.sockets.emit('dataGetOne', {
 			//json
 			// call in client h1data.topic , h1data.windSpeeds....
 			topic: topic1,
-			h1data1: listMessage1[7],
-			obj: objs
+			h1data1: listMessage1[0]
+			// obj: objs
 		});
 	}
 	if (topic == topic2) {
@@ -123,19 +123,20 @@ function mqtt_messageReceived(topic, message) {
 		// set message to var
 		// h2data1 = listMessage2[4];
 		// console.log("pesan : " + h2data1);
-		var objs = JSON.stringify(listMessage2);
-		console.log("Printed")
-		fs.writeFile("data2.json", objs, function (err, result) {
-			if (err) console.log('error', err);
-		});
-		console.log('====================================');
+		// var objs = JSON.stringify(listMessage2);
+		// console.log("Printed")
+		// fs.writeFile("data2.json", objs, function (err, result) {
+		// 	if (err) console.log('error', err);
+		// });
+		console.log('==============Pubs======================');
+
 
 		io.sockets.emit('dataGetTwo', {
 			//json
 			// call in client h1data.topic , h1data.windSpeeds....
 			topic: topic2,
-			h2data1: listMessage2[2],
-			obj: objs
+			h2data1: listMessage2[0]
+			// obj: objs
 		});
 	}
 }
@@ -149,12 +150,19 @@ io.on('connection', (socket) => {
 	jumlahClient++;
 	console.log('New Client Connected');
 
-	// socket.on('ctrl-led1', (data) => {
-	// 	// receive from web and publish mqtt to turn LED1
-	// 	clientMqtt.publish(topic2, data.data.toString());
-	// 	console.log('publish message to ' + topic1 + ' - message ' + data.data);
-	// });
+	socket.on('ctrl-one', (data) => {
+		// receive from web and publish mqtt to turn LED1
+		clientMqtt.publish(topic1, data.data.toString());
+		console.log('==============Subs======================');
+		console.log('publish message to ' + topic1 + ' - message ' + data.data);
+	});
 
+	socket.on('ctrl-two', (data) => {
+		// receive from web and publish mqtt to turn LED1
+		clientMqtt.publish(topic2, data.data.toString());
+		console.log('==============Subs======================');
+		console.log('publish message to ' + topic2 + ' - message ' + data.data);
+	});
 
 	socket.on('disconnect', () => {
 		jumlahClient--;

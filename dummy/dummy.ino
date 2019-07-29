@@ -6,8 +6,8 @@
 
 // Tune Connection
 
-const char* wifiSSID = "Aswandi";
-const char* wifiPassword = "aswandihartati";
+const char* wifiSSID = "KERINCITAMA";
+const char* wifiPassword = "Indokerinci123";
 
 
 // MQTT Define
@@ -23,7 +23,7 @@ WiFiClient myESP; // myESP become WIFI
 PubSubClient client(myESP);
 
 long lastMsg = 0;
-char msg[50], humic[20];
+char msg[50], humic[20], tempc[20];
 int value = 0;
 
 int timeDelay = 100;
@@ -136,17 +136,21 @@ void loop() {
   latitude = latitude + anjay;
   longitude = longitude + anjay;
 
+  String payload = "";
+  payload += char(temp);
   sprintf(humic, "%ld", humi);
+  sprintf(tempc, "%ld", temp);
+  
   
   long now = millis();
   if (now - lastMsg > 2000) {
     lastMsg = now;
     ++value;
-    snprintf (msg, 50, "hello world #%ld", value);
+    snprintf (msg, 50, "meh", temp);
     Serial.print("Publish message: ");
     Serial.println(msg);
     Serial.println(humic);
-    client.publish("latihanTopic1", msg);
+    client.publish("latihanTopic1", tempc);
     client.publish("latihanTopic2", humic);
     //client.publish("latihanTopic1", temp);
   }
