@@ -20,7 +20,7 @@ const mqtt = require('mqtt');
 const topic1 = 'latihanTopic1';
 const topic2 = 'latihanTopic2';
 
-const broker_server = 'mqtt://platform.antares.id'; //broker darisananya
+const broker_server = 'mqtt://broker.hivemq.com '; //broker darisananya
 
 const options = {
 	clientId: 'esp_device' + Math.random().toString(16).substr(2, 8),

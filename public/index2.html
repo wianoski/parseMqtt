@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="">
+  <meta name="author" content="">
+  <title>Dashboard</title>
+  <!-- Bootstrap core CSS-->
+  <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Custom fonts for this template-->
+  <link href="vendor/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+  <!-- Page level plugin CSS-->
+  <link href="vendor/datatables/dataTables.bootstrap4.css" rel="stylesheet">
+  <!-- Custom styles for this template-->
+  <link href="css/sb-admin.css" rel="stylesheet">
+  <!-- <link href="css/sikap.css" rel="stylesheet"> -->
+  <style type="text/css" media="screen">
+
+</style>
+</head>
+
+<body class="fixed-nav sticky-footer bg-dark" id="page-top" onload="getDatas()">
+  <!-- Navigation-->
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top" id="mainNav">
+    <a class="navbar-brand" href="index.html">Dashboard</a>
+    <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarResponsive">
+      <ul class="navbar-nav navbar-sidenav" id="exampleAccordion">
+        <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Dashboard">
+          <a class="nav-link" href="index.html">
+            <i class="fa fa-fw fa-dashboard"></i>
+            <span class="nav-link-text">Dashboard</span>
+          </a>
+        </li>
+        <!-- <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Charts">
+          <a class="nav-link" href="charts.html">
+            <i class="fa fa-fw fa-area-chart"></i>
+            <span class="nav-link-text">Charts</span>
+          </a>
+        </li> -->
+        <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Tables">
+          <a class="nav-link" href="tables.html">
+            <i class="fa fa-fw fa-table"></i>
+            <span class="nav-link-text">Tables</span>
+          </a>
+        </li>
+        
+        <!-- <a id="start-stop" class="btn btn-primary btn-block" href="">Reset</a>
+          <a id="reset-lap" class="btn btn-danger btn-block" href="">Reset</a> -->
+          
+        </ul>
+
+      </div>
+    </nav>
+    <div class="content-wrapper">
+      <div class="container-fluid">
+        <!-- Breadcrumbs-->
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item">
+            <a href="#">Dashboard</a>
+          </li>
+          <li class="breadcrumb-item active">Data Raw</li>
+          <input type="hidden" id="showed">
+        </ol>
+        <!-- dddddddddddddddddddddddddddddddd -->
+        <div class="row">
+          <div class="col-xl-4 col-sm-6 mb-3">
+            <div class="card text-white bg-primary ">
+              <div class="card-body">
+                <div class="mr-5" id="dataOne1"></div>
+              </div>
+              <div class="card-footer text-white clearfix small z-1">
+                <span class="float-left" >Data Gas in number</span>
+                <span class="float-right">
+
+                </span>
+              </div>
+            </div>
+          </div>
+          <div class="col-xl-4 col-sm-6 mb-3">
+            <div class="card text-white bg-danger ">
+              <div class="card-body">
+                <div class="mr-5" id="dataTwo1"></div>
+              </div>
+              <div class="card-footer text-white clearfix small z-1">
+                <span class="float-left" >Data Temperatur in number</span>
+                <span class="float-right">
+
+                </span>
+              </div>
+            </div>
+          </div>
+          <div class="col-xl-4 col-sm-6 mb-3">
+            <div class="card text-white bg-warning ">
+              <div class="card-body">
+                <div class="mr-5" id="hdrop"></div>
+              </div>
+              <div class="card-footer text-white clearfix small z-1">
+                <span class="float-left" >Data Height Drop in number</span>
+                <span class="float-right">
+
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-xl-4 col-sm-6 mb-3">
+            <div class="card text-white bg-warning ">
+              <div class="card-body">
+                <div class="mr-5" id="roll"></div>
+              </div>
+              <div class="card-footer text-white clearfix small z-1">
+                <span class="float-left" >Data roll in number</span>
+                <span class="float-right">
+
+                </span>
+              </div>
+            </div>
+          </div>
+          <div class="col-xl-4 col-sm-6 mb-3">
+            <div class="card text-white bg-danger ">
+              <div class="card-body">
+                <div class="mr-5" id="yaw"></div>
+              </div>
+              <div class="card-footer text-white clearfix small z-1">
+                <span class="float-left" >Data yaw in number</span>
+                <span class="float-right">
+
+                </span>
+              </div>
+            </div>
+          </div>
+          <div class="col-xl-4 col-sm-6 mb-3">
+            <div class="card text-white bg-primary ">
+              <div class="card-body">
+                <div class="mr-5" id="pitch"></div>
+              </div>
+              <div class="card-footer text-white clearfix small z-1">
+                <span class="float-left" >Data Pitch in number</span>
+                <span class="float-right">
+
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!--  -->
+        <!-- <div class="container">
+          <div class="card card-register mx-auto mt-5">
+            <div class="card-header">Register an Account</div>
+            <div class="card-body">
+              
+              <a class="btn btn-primary btn-block" href="login.html">Register</a>
+              <div class="text-center">
+
+              </div>
+            </div>
+          </div>
+        </div> -->
+        <!--  -->
+        <div class="row">
+          <div class="col-md-8">
+            <canvas hidden id="gaugeGasss"></canvas>
+
+          </div>
+        </div>
+        <div class="col-md-6 col-sm-6 col-xs-12">
+          <div class="x_panel">
+
+          </div>
+        </div>
+        <div>
+          <div id="peta" style=" margin-top:100px ; width:100%; height:500px;"> </div>
+        </div>
+        <!-- dddddddddddddddddddddddddddddddddddddddddddddddddd -->
+    <!-- <div>
+        <div id="peta" style=" margin-top:100px ; width:100%; height:500px;"><div>
+        </div> -->
+        <!-- /.container-fluid-->
+        <!-- /.content-wrapper-->
+        <br>
+        <footer class="sticky-footer">
+          <div class="container">
+            <div class="text-center">
+              <small>Copyright © Your Website 2018</small>
+              <img src="img/log.png" alt="" style="width: 5%">
+              <img src="http://lab.see.telkomuniversity.ac.id/lab/img_galeri/163177aptrg1.jpg" alt="" style="width: 5%">
+              <img src="img/log.png" alt="" style="width: 5%">
+              <img src="img/log.png" alt="" style="width: 5%">
+            </div>
+          </div>
+        </footer>
+        <!-- Scroll to Top Button-->
+        <a class="scroll-to-top rounded" href="#page-top">
+          <i class="fa fa-angle-up"></i>
+        </a>
+        <!-- Logout Modal-->
+
+
+        <script src="vendor/jquery/jquery-3.3.1.min.js"></script>
+        <script src="vendor/bootstrap-3.3.7-dist/js/bootstrap.js"></script>
+        <script src="vendor/Highcharts-6.0.7/code/highcharts.js"></script>
+        <script src="vendor/sprite3d/Sprite3D.js"></script>
+
+        <!-- GOogle Maps -->
+        <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB3gy1WJa0hxSXK81VLS3iuLBGj216PnpE&sensor=false"></script>
+        <!--  Gauge -->
+        <script src="vendor/gauge/gauge.min.js">  </script>
+
+
+        <script src="/socket.io/socket.io.js"></script> <!-- Import socket io -->
+        <script src="app/app.js"></script> <!-- import data js -->      </div>
+    </body>
+
+    </html>

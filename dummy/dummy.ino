@@ -6,12 +6,12 @@
 
 // Tune Connection
 
-const char* wifiSSID = "KERINCITAMA";
-const char* wifiPassword = "Indokerinci123";
+const char* wifiSSID = "Webs ploor";
+const char* wifiPassword = "bismillahx";
 
 
 // MQTT Define
-const char* mqttServerIP = "platform.antares.id";
+const char* mqttServerIP = "broker.hivemq.com";
 //const char* mqttServerIP = "192.168.1.2";
 const int mqttPort = 1883;
 

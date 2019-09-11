@@ -1,61 +1,102 @@
-import itertools
-import string
+import cv2
+import numpy as np
+import time
+import paho.mqtt.client as mqtt
 import sys
-import colorama
-from colorama import Fore
 
-def match(guess):
-    if guess == password:
-        print("Security penetrated!")
-        print("Password match with : ", list(guess))
-        return True
+# mqtt://broker.hivemq.com 
+brokerHost = "broker.hivemq.com"
+port = 1883
+
+topic1 = "pir/pirOn"
+topic2 = "pir/pirOff"
+
+subTopic1 = topic1
+subTopic2 = topic2
+
+timestr = time.strftime("%Y-%m-%d %H:%M:%S")
+
+
+def on_connect_on(client, userData, flags, rc):
+  print("connect with: "+str(rc))
+  print("subs with topic: ", subTopic1)
+  clientMqtt.subscribe(subTopic1)
+
+  print("subs with topic: ", subTopic2)
+  clientMqtt.subscribe(subTopic2)
+
+
+
+def on_message_on(client, userData, message):
+  print("Message: ", message.topic , " - qos=", message.qos , " - flag=", message.retain)
+  receivedMessage = str(message.payload.decode("utf-8"))
+  print("received message = " , receivedMessage)
+  if (receivedMessage == "1"):
+    print("ceritanya ngerecord")
+    # recording()
+  else:
+    destroyS()
+
+
+clientMqtt = mqtt.Client("client-server")
+
+# Create a VideoCapture object
+cap = cv2.VideoCapture(0)
+ 
+# Check if camera opened successfully
+if (cap.isOpened() == False): 
+  print("Unable to read camera feed")
+
+OUTPUT_FILE = 'video-'+ timestr + '-.avi'
+ 
+# Default resolutions of the frame are obtained.The default resolutions are system dependent.
+# We convert the resolutions from float to integer.
+frame_width = int(cap.get(3))
+frame_height = int(cap.get(4))
+ 
+# Define the codec and create VideoWriter object.The output is stored in 'outpy.avi' file.
+out = cv2.VideoWriter(OUTPUT_FILE,cv2.VideoWriter_fourcc('M','J','P','G'), 25, (frame_width,frame_height))
+
+def recording():
+  while(True):
+    ret, frame = cap.read()
+  
+    if ret == True: 
+      
+      # Write the frame into the file 'output.avi'
+      out.write(frame)
+  
+      # Display the resulting frame    
+      # cv2.imshow('frame',frame)
+  
+      print("Capturing video")
+
+      # Press Q on keyboard to stop recording
+      if cv2.waitKey(1) & 0xFF == ord('q'):
+        break
+
+      
+    # Break the loop
     else:
-        return False
+      break 
+  
+  # When everything done, release the video capture and video write objects
+  cap.release()
+  out.release()
+  
+  # Closes all the frames
+  cv2.destroyAllWindows() 
 
-def penetrate():
-    strings = string.ascii_lowercase+string.ascii_uppercase+"1234567890"
-    for passwordLength in range(minimumCharacter, maximumCharacter+1):
-        for temporary in itertools.product(strings, repeat=passwordLength):
-            temporary = ''.join(temporary)
-            a = temporary
-            if match(a):
-                print('Execution done.')
-                sys.exit()
-            else:
-                print(list(temporary))
+def destroyS():
+  sys.exit()
 
 def main():
-    global password,minimumCharacter,maximumCharacter
-    print(Fore.LIGHTGREEN_EX)
-    password = input("Set a virutal password : ")
-    print(Fore.RESET)
-    minimumStatus = False
-    maximumStatus = False
-    while minimumStatus == False:
-        print(Fore.LIGHTCYAN_EX)
-        minimumCharacter = int(input('Input minimum possible character : '))
-        print(Fore.RESET)
-        if minimumCharacter < 0 or minimumCharacter == 0:
-            print(Fore.RED+"Invalid input! Should be bigger than zero."+Fore.RESET)
-        else:
-            minimumStatus = True
-    while maximumStatus == False:
-        print(Fore.LIGHTBLUE_EX)
-        maximumCharacter = int(input("Input maximum possible character : "))
-        print(Fore.RESET)
-        if maximumCharacter < minimumCharacter:
-            print(Fore.RED+"Invalid input! Should be at least same or bigger than minimum possible character."+Fore.RESET)
-        else:
-            maximumStatus = True
-    print(Fore.LIGHTGREEN_EX+"Virtual password has been set to : "+Fore.RESET+"", password)
-    print(Fore.LIGHTCYAN_EX+"Minimum possible character set to : "+Fore.RESET+"", minimumCharacter)
-    print(Fore.LIGHTBLUE_EX+"Maximum possible character set to : "+Fore.RESET+"", maximumCharacter)
-    print(Fore.LIGHTYELLOW_EX)
-    prompt = input("Proceed to execute penetration? (Y/N): ")
-    print(Fore.RESET)
-    if prompt == 'Y' or prompt == 'y':
-        penetrate()
+  clientMqtt.on_message = on_message_on
+  clientMqtt.on_connect = on_connect_on
+  print("connecting to broker: ", brokerHost)
+  clientMqtt.connect(brokerHost, port)
 
-if __name__ == '__main__':
-    colorama.init()
+  clientMqtt.loop_forever()
+
+if __name__ == "__main__":
     main()
