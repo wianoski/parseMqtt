@@ -10,9 +10,11 @@ port = 1883
 
 topic1 = "pir/pirOn"
 topic2 = "pir/pirOff"
+topic3 = "finger/found"
 
 subTopic1 = topic1
 subTopic2 = topic2
+subTopic3 = topic3
 
 timestr = time.strftime("%Y-%m-%d %H:%M:%S")
 
@@ -25,15 +27,20 @@ def on_connect_on(client, userData, flags, rc):
   print("subs with topic: ", subTopic2)
   clientMqtt.subscribe(subTopic2)
 
+  print("subs finger: ", subTopic3)
+  clientMqtt.subscribe(subTopic3)
+
 
 
 def on_message_on(client, userData, message):
-  print("Message: ", message.topic , " - qos=", message.qos , " - flag=", message.retain)
+  # print("Message: ", message.topic , " - qos=", message.qos , " - flag=", message.retain)
   receivedMessage = str(message.payload.decode("utf-8"))
   print("received message = " , receivedMessage)
   if (receivedMessage == "1"):
-    print("ceritanya ngerecord")
-    # recording()
+    # print("ceritanya ngerecord")
+    recording()
+  elif(receivedMessage == "found_id"):
+    print(receivedMessage)
   else:
     destroyS()
 
@@ -41,7 +48,7 @@ def on_message_on(client, userData, message):
 clientMqtt = mqtt.Client("client-server")
 
 # Create a VideoCapture object
-cap = cv2.VideoCapture(0)
+cap = cv2.VideoCapture(2)
  
 # Check if camera opened successfully
 if (cap.isOpened() == False): 
@@ -57,8 +64,9 @@ frame_height = int(cap.get(4))
 # Define the codec and create VideoWriter object.The output is stored in 'outpy.avi' file.
 out = cv2.VideoWriter(OUTPUT_FILE,cv2.VideoWriter_fourcc('M','J','P','G'), 25, (frame_width,frame_height))
 
+start_time = time.time()
 def recording():
-  while(True):
+  while(int(time.time()-start_time) < 30):
     ret, frame = cap.read()
   
     if ret == True: 
@@ -72,8 +80,8 @@ def recording():
       print("Capturing video")
 
       # Press Q on keyboard to stop recording
-      if cv2.waitKey(1) & 0xFF == ord('q'):
-        break
+      # if cv2.waitKey(1) & 0xFF == ord('q'):
+      #   break
 
       
     # Break the loop
