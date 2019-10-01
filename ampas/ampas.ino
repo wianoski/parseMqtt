@@ -8,8 +8,8 @@
 
 //# define Finger_Rx 7 //D5
 //# define Finger_Tx 6 //D6
-# define Finger_Rx 13 //D5
-# define Finger_Tx 15 //D6
+# define Finger_Rx 13 //D7
+# define Finger_Tx 15 //D8
 
 # define esp_Rx 3
 # define esp_Tx 2
@@ -20,8 +20,8 @@ SoftwareSerial toESP(Finger_Rx, Finger_Tx, false, 256);
 Adafruit_Fingerprint finger = Adafruit_Fingerprint( & toESP);
 
 
-const char* wifiSSID = "APTRG juara umum !";
-const char* wifiPassword = "gsglantaiduaaa";
+const char* wifiSSID = "StudioIoT";
+const char* wifiPassword = "tanyapakandrian";
 
 //const char* wifiSSID = "Webs ploor";
 //const char* wifiPassword = "bismillahx";
@@ -391,17 +391,17 @@ void loop() {
           String dataSent = "";
           dataSent = String(foundJari);
           publishMQTT(device1, foundJari);
-
+          break;
         }
+        
         /*Subs end*/
 
         
         // digitalWrite(in2, HIGH);
         // delay(1000);
         // digitalWrite(in2, LOW);
-//        in1 = -1;
+        in1 = -1;
       }
-
     }
 
   } else if (menu == 3) {

@@ -1,23 +1,26 @@
-# import serial 
-from serial import Serial
+import serial
 import time
 
-port = 'COM4'
-ard = Serial(port, 115200, timeout=1)
+ser = serial.Serial('/dev/ttyUSB0', 57600, timeout = 1) # ttyACM1 for Arduino board
 
-i = 0
+readOut = 0   #chars waiting from laser range finder
 
-masukan = input('Run on everything : ')
-while (masukan != '0'):
-	inputs = input("Input : ")
-	ard.write(inputs)
-	msg = ard.read(ard.inWaiting())
-	print('Msg : Accepted')
-	print(msg)
+print ("Starting up")
+connected = False
+commandToSend = 1 # get the distance in mm
 
-	if inputs == '0':
-		print('Msg : Done')
-		break
-
-
-
+while True:
+    print ("Writing: ",  commandToSend)
+    # ser.write(str(commandToSend).encode())
+    time.sleep(1)
+    while True:
+        try:
+            print ("Attempt to Read")
+            readOut = ser.readline().decode('ascii')
+            time.sleep(1)
+            print ("Reading: ", readOut) 
+            break
+        except:
+            pass
+    print ("Restart")
+    ser.flush() #flush the buffer

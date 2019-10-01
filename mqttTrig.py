@@ -15,13 +15,9 @@ port = 1883
 
 topic1 = "pir/pirOn"
 topic2 = "pir/pirOff"
-topic3 = "finger/found"
-topic4 = "finger/found_out"
 
 subTopic1 = topic1
 subTopic2 = topic2
-subTopic3 = topic3
-subTopic4 = topic4
 
 
 
@@ -33,11 +29,6 @@ def on_connect_on(client, userData, flags, rc):
   print("subs with topic: ", subTopic2)
   clientMqtt.subscribe(subTopic2)
 
-  print("subs with topic: ", subTopic4)
-  clientMqtt.subscribe(subTopic4)
-
-  print("subs finger: ", subTopic3)
-  clientMqtt.subscribe(subTopic3)
 
 
 
